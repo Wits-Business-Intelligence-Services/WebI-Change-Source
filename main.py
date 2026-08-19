@@ -5,9 +5,9 @@ from pathlib import Path
 import sqlalchemy as sql
 import sqlalchemy.orm as sql_orm
 
-import api_backend
-from SettingsManager import SettingsManager
-from db_backend import *
+from src import api_backend
+from src.SettingsManager import SettingsManager
+from src.db_backend import *
 
 
 def main(settings_manager: SettingsManager, logger: logging.Logger):
