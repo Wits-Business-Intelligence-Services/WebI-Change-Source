@@ -3,7 +3,7 @@ from json import JSONDecoder
 
 from requests import Response, get, post, put
 
-from SettingsManager import SettingsManager
+from webi_change_source.SettingsManager import SettingsManager
 from .DataProviderQueryResult import DataProviderQueryResult
 
 

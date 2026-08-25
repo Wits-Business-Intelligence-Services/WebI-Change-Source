@@ -1,6 +1,6 @@
 import tomllib
-from copy import copy
 from pathlib import Path
+from random import shuffle
 
 
 class SettingsManager:
@@ -18,12 +18,11 @@ class SettingsManager:
         self.webi_document_list_file_path: Path = Path(raw_settings["settings"]["webi_document_list_file_path"])
         with open(self.webi_document_list_file_path, "r") as f:
             self.document_list: list[int] = [int(x.strip()) for x in f if x != ""]
-
-        self._standard_headers: dict = {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-        }
+            shuffle(self.document_list)
 
     @property
     def standard_headers(self):
-        return copy(self._standard_headers)
+        return {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        }

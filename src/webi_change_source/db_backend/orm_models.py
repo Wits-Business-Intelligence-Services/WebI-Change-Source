@@ -16,11 +16,21 @@ class Document(Base):
 
     id: sql_orm.Mapped[int] = sql_orm.mapped_column(primary_key=True)
     name: sql_orm.Mapped[str]
+    path: sql_orm.Mapped[str]
+    created_by: sql_orm.Mapped[str]
+    last_author: sql_orm.Mapped[str]
     last_updated: sql_orm.Mapped[datetime]
     status: sql_orm.Mapped[str]
 
     def __repr__(self) -> str:
-        return f"Document(id={self.id!r}, name={self.name!r}, last_updated={self.last_updated!r})"
+        return (f"Document("
+                f"id={self.id!r}, "
+                f"name={self.name!r}, "
+                f"path={self.path}, "
+                f"created_by={self.created_by}, "
+                f"last_author={self.last_author}, "
+                f"last_updated={self.last_updated!r}, "
+                f")")
 
 
 class DataProvider(Base):

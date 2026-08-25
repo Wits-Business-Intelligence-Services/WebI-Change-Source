@@ -7,4 +7,12 @@ dependencies = [
     "requests",
     "ruff",
     "sqlalchemy",
+    "typer",
+    "tqdm"
 ]
+[project.scripts]
+webi_change_source = "webi_change_source.cli:app"
+
+[build-system]
+requires = ["uv_build>=0.12.5,<0.13"]
+build-backend = "uv_build"
