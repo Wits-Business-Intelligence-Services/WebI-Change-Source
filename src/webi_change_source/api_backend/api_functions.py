@@ -190,10 +190,10 @@ def get_all_data_provider_details(
 
 
 def get_data_provider_mappings(
-        document_id: int,
-        id_dp: str,
-        settings_manager: SettingsManager,
-        logon_token: str,
+    document_id: int,
+    data_provider_id: str,
+    settings_manager: SettingsManager,
+    logon_token: str,
 ) -> tuple[list | None, str | None]:
     func_logger: logging.Logger = logger.getChild("get_data_provider_mappings")
 
@@ -208,7 +208,7 @@ def get_data_provider_mappings(
     url: str = f"{settings_manager.cms_server_host}:{settings_manager.cms_server_port}/biprws/raylight/v1/documents/{document_id}/dataproviders/mappings"
 
     params: dict = {
-        "originDataproviderIds": id_dp,
+        "originDataproviderIds": data_provider_id,
         "targetDatasourceId": settings_manager.new_universe_id,
     }
 
@@ -228,12 +228,12 @@ def get_data_provider_mappings(
 
 
 def change_data_provider_mappings(
-        document_id: int,
-        dp_id: str,
-        mappings: str,
-        settings_manager: SettingsManager,
-        logon_token: str,
-) -> tuple[bool, dict | None, str | None]:
+    document_id: int,
+    data_provider_id: str,
+    mappings: str,
+    settings_manager: SettingsManager,
+    logon_token: str,
+) -> tuple[bool, dict | None]:
     func_logger: logging.Logger = logger.getChild("change_data_provider_mappings")
 
     headers: dict = settings_manager.standard_headers
@@ -242,7 +242,7 @@ def change_data_provider_mappings(
     url: str = f"{settings_manager.cms_server_host}:{settings_manager.cms_server_port}/biprws/raylight/v1/documents/{document_id}/dataproviders/mappings"
 
     params: dict = {
-        "originDataproviderIds": dp_id,
+        "originDataproviderIds": data_provider_id,
         "targetDatasourceId": settings_manager.new_universe_id,
         "skipChecking": "true",
     }
