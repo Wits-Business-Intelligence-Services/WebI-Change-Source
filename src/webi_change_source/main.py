@@ -128,8 +128,9 @@ def process_and_perform_conversion(
                     logger.info(f"status_unload = {conversion.status_unload}")
 
             except Exception as e:
-                thread_session.rollback()
-                raise e
+                number_of_failures += 1
+                logger.error(f"Error during change source process: {e}")
+
             finally:
                 thread_session.commit()
 
@@ -200,12 +201,12 @@ def main():
                         initial_db_population_results[doc_id] = future.result()
                     pbar.update(1)
 
-        # Run in serial for any that failed above
-        document_id: int
-        for document_id in [doc_id for doc_id, status_success in initial_db_population_results.items() if
-                            status_success == False]:
-            populate_document_record(document_id, settings_manager, session_maker)
-            populate_dataprovider_records(document_id, settings_manager, session_maker)
+                # Run in serial for any that failed above
+                document_id: int
+                for document_id in [doc_id for doc_id, status_success in initial_db_population_results.items() if
+                                    status_success == False]:
+                    populate_document_record(document_id, settings_manager, session_maker)
+                    populate_dataprovider_records(document_id, settings_manager, session_maker)
 
     if perform_conversions:
         with sql_orm.Session(db_engine) as session:

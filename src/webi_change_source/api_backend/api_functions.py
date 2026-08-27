@@ -101,6 +101,42 @@ def get_document_details(
     return response_dict["document"] if ok and response_dict is not None else None
 
 
+def get_single_data_provider_details(
+    document_id: int,
+    data_provider_id: str,
+    settings_manager: SettingsManager,
+    logon_token: str,
+) -> DataProviderQueryResult | None:
+    func_logger: logging.Logger = logger.getChild("get_single_data_provider_details")
+
+    headers: dict = settings_manager.standard_headers
+    headers["X-SAP-LogonToken"] = logon_token
+
+    url: str = f"{settings_manager.cms_server_host}:{settings_manager.cms_server_port}/biprws/raylight/v1/documents/{document_id}/dataproviders/{data_provider_id}"
+
+    ok: bool
+    response_dict: dict | None
+    ok, response_dict, _ = __extract_response(
+        get(url=url, headers=headers),
+        func_logger
+    )
+
+    if ok and response_dict is not None:
+        dp_record: dict = response_dict["dataprovider"]
+        dp = DataProviderQueryResult(
+            data_source_id=dp_record["dataSourceId"] if "dataSourceId" in dp_record else -1,
+            data_source_type=dp_record["dataSourceType"] if "dataSourceType" in dp_record else "UNKNOWN",
+            id=dp_record["id"] if "id" in dp_record else "UNKNOWN",
+            name=dp_record["name"] if "name" in dp_record else "UNKNOWN",
+        )
+
+        func_logger.info(f"Successfully got data provider details for {document_id}:{data_provider_id}")
+        return dp
+    else:
+        func_logger.error(f"Failed to get data provider details for {document_id}:{data_provider_id}")
+        return None
+
+
 def get_all_data_provider_details(
     document_id: int,
     settings_manager: SettingsManager,
