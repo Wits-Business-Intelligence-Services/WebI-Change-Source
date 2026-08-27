@@ -27,51 +27,55 @@ def populate_document_record(
             # print(warn_msg)
             func_logger.warning(warn_msg)
     with session_maker() as session:
-        stmt = sql.select(Document).where(Document.id == document_id)
+        try:
+            stmt = sql.select(Document).where(Document.id == document_id)
 
-        if doc_details is None:
-            if session.scalars(stmt).one_or_none() is not None:
-                # Perform an update
-                doc = session.scalars(stmt).one()
-                doc.status = "MISSING"
+            if doc_details is None:
+                if session.scalars(stmt).one_or_none() is not None:
+                    # Perform an update
+                    doc = session.scalars(stmt).one()
+                    doc.status = "MISSING"
+                else:
+                    # Create new record
+                    doc: Document = Document(
+                        id=document_id,
+                        name="UNKNOWN",
+                        path="UNKNOWN",
+                        created_by="UNKNOWN",
+                        last_author="UNKNOWN",
+                        last_updated=datetime.fromtimestamp(0, tz=UTC),
+                        status="MISSING"
+                    )
+                    session.add(doc)
+                output_status = False
             else:
-                # Create new record
-                doc: Document = Document(
-                    id=document_id,
-                    name="UNKNOWN",
-                    path="UNKNOWN",
-                    created_by="UNKNOWN",
-                    last_author="UNKNOWN",
-                    last_updated=datetime.fromtimestamp(0, tz=UTC),
-                    status="UNKNOWN"
-                )
-                session.add(doc)
-            output_status = False
-        else:
-            if session.scalars(stmt).one_or_none() is not None:
-                # Perform an update
-                doc = session.scalars(stmt).one()
-                doc.name = doc_details["name"]
-                doc.path = doc_details["path"]
-                doc.created_by = doc_details["createdBy"]
-                doc.last_author = doc_details["lastAuthor"]
-                doc.last_updated = datetime.fromisoformat(doc_details["updated"])
-                doc.status = "OK"
-            else:
-                # Create new record
-                doc: Document = Document(
-                    id=document_id,
-                    name=doc_details["name"],
-                    path=doc_details["path"],
-                    created_by=doc_details["createdBy"],
-                    last_author=doc_details["lastAuthor"],
-                    last_updated=datetime.fromisoformat(doc_details["updated"]),
-                    status="OK",
-                )
-                session.add(doc)
-            output_status = True
+                if session.scalars(stmt).one_or_none() is not None:
+                    # Perform an update
+                    doc = session.scalars(stmt).one()
+                    doc.name = doc_details["name"] if "name" in doc_details else "UNKNOWN"
+                    doc.path = doc_details["path"] if "path" in doc_details else "UNKNOWN"
+                    doc.created_by = doc_details["createdBy"] if "createdBy" in doc_details else "UNKNOWN"
+                    doc.last_author = doc_details["lastAuthor"] if "lastAuthor" in doc_details else "UNKNOWN"
+                    doc.last_updated = datetime.fromisoformat(
+                        doc_details["updated"]) if "updated" in doc_details else datetime.fromtimestamp(0, tz=UTC)
+                    doc.status = "OK"
+                else:
+                    # Create new record
+                    doc: Document = Document(
+                        id=document_id,
+                        name=doc_details["name"] if "name" in doc_details else "UNKNOWN",
+                        path=doc_details["path"] if "path" in doc_details else "UNKNOWN",
+                        created_by=doc_details["createdBy"] if "createdBy" in doc_details else "UNKNOWN",
+                        last_author=doc_details["lastAuthor"] if "lastAuthor" in doc_details else "UNKNOWN",
+                        last_updated=datetime.fromisoformat(
+                            doc_details["updated"]) if "updated" in doc_details else datetime.fromtimestamp(0, tz=UTC),
+                        status="OK",
+                    )
+                    session.add(doc)
+                output_status = True
+        finally:
+            session.commit()
 
-        session.commit()
         return output_status
 
 
