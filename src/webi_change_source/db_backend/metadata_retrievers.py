@@ -118,6 +118,6 @@ def populate_dataprovider_records(
                 )
                 session.add(dp)
 
-        session.commit()
+            session.commit()
 
     return True
