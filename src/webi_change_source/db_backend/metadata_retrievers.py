@@ -8,23 +8,24 @@ from webi_change_source import api_backend
 from webi_change_source.SettingsManager import SettingsManager
 from .orm_models import DataProvider, Document
 
+logger: logging.Logger = logging.getLogger(__name__)
+
 
 def populate_document_record(
-        document_id: int,
-        settings_manager: SettingsManager,
-        logger: logging.Logger,
-        session_maker: sql_orm.sessionmaker
+    document_id: int,
+    settings_manager: SettingsManager,
+    session_maker: sql_orm.sessionmaker,
 ) -> bool:
-    logger.info(f"Getting base record template for {document_id}")
+    func_logger: logging.Logger = logger.getChild("populate_document_record")
 
-    with api_backend.APILogonManager(settings_manager, logger) as logon_token:
-        doc_details: dict | None = api_backend.get_document_details(
-            document_id, settings_manager, logon_token, logger
-        )
+    func_logger.info(f"Getting base record template for {document_id}")
+
+    with api_backend.APILogonManager(settings_manager) as logon_token:
+        doc_details: dict | None = api_backend.get_document_details(document_id, settings_manager, logon_token)
         if doc_details is None:
             warn_msg: str = f"Failed to retrieve document details for: {document_id}"
             # print(warn_msg)
-            logger.warning(warn_msg)
+            func_logger.warning(warn_msg)
     with session_maker() as session:
         stmt = sql.select(Document).where(Document.id == document_id)
 
@@ -75,20 +76,22 @@ def populate_document_record(
 
 
 def populate_dataprovider_records(
-        document_id: int,
-        settings_manager: SettingsManager,
-        logger: logging.Logger,
-        session_maker: sql_orm.sessionmaker
+    document_id: int,
+    settings_manager: SettingsManager,
+    session_maker: sql_orm.sessionmaker,
 ) -> bool:
+    func_logger: logging.Logger = logger.getChild("populate_document_record")
+
     logon_token: str
-    with api_backend.APILogonManager(settings_manager, logger) as logon_token:
+    with api_backend.APILogonManager(settings_manager) as logon_token:
         # print(f"Attempting to get data providers for BO ID: {id}")
         dp_list: list[api_backend.DataProviderQueryResult] | None = api_backend.get_all_data_provider_details(
-            document_id, settings_manager, logon_token, logger
+            document_id,
+            settings_manager,
+            logon_token
         )
 
     if dp_list is None or len(dp_list) == 0:
-        print(f"Failed to retrieve data provider details for: {document_id}")
         return False
 
     with session_maker() as session:
