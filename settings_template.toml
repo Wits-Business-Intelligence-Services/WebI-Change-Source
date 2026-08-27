@@ -7,3 +7,6 @@ auth_type = "secLDAP"
 old_universe_id = -1
 new_universe_id = -1
 webi_document_list_file_path = ""
+update_document_data = true
+perform_change_source = false
+num_workers = 8

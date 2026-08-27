@@ -172,18 +172,14 @@ def main():
 
     Base.metadata.create_all(db_engine)
 
-    num_workers: int = 8
-    gather_initial_db_data: bool = False
-    perform_conversions: bool = True
-
-    if gather_initial_db_data:
+    if settings_manager.update_document_data:
 
         # Get base records for db
         with tqdm(total=len(settings_manager.document_list)) as pbar:
 
             total_failures: int = 0
 
-            if num_workers == 1:
+            if settings_manager.num_workers == 1:
                 document_id: int
                 for document_id in settings_manager.document_list:
                     try:
@@ -197,7 +193,7 @@ def main():
                         pbar.set_description(f"Gathering info - Total failures: {total_failures}")
 
             else:
-                with ThreadPoolExecutor(max_workers=num_workers) as executor:
+                with ThreadPoolExecutor(max_workers=settings_manager.num_workers) as executor:
 
                     futures: dict[concurrent.futures.Future, int] = {
                         executor.submit(
@@ -230,7 +226,7 @@ def main():
                     populate_document_record(document_id, settings_manager, session_maker)
                     populate_dataprovider_records(document_id, settings_manager, session_maker)
 
-    if perform_conversions:
+    if settings_manager.perform_change_source:
         with sql_orm.Session(db_engine) as session:
 
             batch_no_stmt = sql.select(sql.func.max(Conversion.batch_no))
@@ -238,7 +234,7 @@ def main():
             batch_no = batch_no_stmt_result + 1 if batch_no_stmt_result is not None else 1
 
         with tqdm(total=len(settings_manager.document_list)) as pbar:
-            with ThreadPoolExecutor(max_workers=num_workers) as executor:
+            with ThreadPoolExecutor(max_workers=settings_manager.num_workers) as executor:
 
                 total_failures: int = 0
 
