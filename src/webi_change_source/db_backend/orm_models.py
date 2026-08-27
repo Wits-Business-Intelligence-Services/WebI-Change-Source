@@ -22,7 +22,9 @@ class Document(Base):
     last_updated: sql_orm.Mapped[datetime]
     status: sql_orm.Mapped[str]
 
-    def __repr__(self) -> str:
+    def __repr__(
+        self,
+    ) -> str:
         return (f"Document("
                 f"id={self.id!r}, "
                 f"name={self.name!r}, "
@@ -43,7 +45,9 @@ class DataProvider(Base):
     data_source_original_type: sql_orm.Mapped[str]
     data_source_type: sql_orm.Mapped[str]
 
-    def __repr__(self) -> str:
+    def __repr__(
+        self,
+    ) -> str:
         return (f"DataProvider("
                 f"id={self.id!r}, "
                 f"document_id={self.document_id!r}, "
@@ -60,8 +64,9 @@ class Conversion(Base):
     batch_no: sql_orm.Mapped[int] = sql_orm.mapped_column(primary_key=True)
     conversion_date: sql_orm.Mapped[datetime] = sql_orm.mapped_column(primary_key=True)
     query_id: sql_orm.Mapped[str] = sql_orm.mapped_column(sql.ForeignKey("data_providers.id"), primary_key=True)
-    document_id: sql_orm.Mapped[int] = sql_orm.mapped_column(sql.ForeignKey("data_providers.document_id"),
-                                                             primary_key=True)
+    document_id: sql_orm.Mapped[int] = sql_orm.mapped_column(
+        sql.ForeignKey("data_providers.document_id"),
+        primary_key=True)
 
     status_dp_details: sql_orm.Mapped[str | None]
     status_dp_correct_source: sql_orm.Mapped[str | None]
@@ -70,7 +75,9 @@ class Conversion(Base):
     status_save: sql_orm.Mapped[str | None]
     status_unload: sql_orm.Mapped[str | None]
 
-    def __repr__(self) -> str:
+    def __repr__(
+        self,
+    ) -> str:
         return (f"DataProvider("
                 f"query_id={self.query_id!r}, "
                 f"document_id={self.document_id!r}, "

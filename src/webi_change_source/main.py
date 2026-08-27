@@ -1,4 +1,4 @@
-import concurrent
+import concurrent.futures
 import logging
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
@@ -17,17 +17,17 @@ from webi_change_source.db_backend import *
 logger: logging.Logger = logging.getLogger(__name__)
 
 def process_and_perform_conversion(
-        document_id: int,
-        batch_no: int,
-        settings_manager: SettingsManager,
-        session_maker: sql_orm.sessionmaker
+    document_id: int,
+    batch_no: int,
+    settings_manager: SettingsManager,
+    session_maker: sql_orm.sessionmaker,
 ) -> bool:
     with session_maker() as thread_session:
         func_logger: logging.Logger = logger.getChild("process_and_perform_conversion")
 
         number_of_failures: int = 0
 
-        stmt = sql.select(DataProvider).where(DataProvider.document_id == document_id)
+        stmt: sql.Select[tuple[DataProvider]] = sql.select(DataProvider).where(DataProvider.document_id == document_id)
 
         dp: DataProvider
         for dp in thread_session.scalars(stmt):
@@ -244,7 +244,8 @@ def main():
 
                 futures: dict[concurrent.futures.Future, int] = {
                     executor.submit(
-                        lambda x: process_and_perform_conversion(x, batch_no, settings_manager, session_maker),
+                        lambda
+                            x: process_and_perform_conversion(x, batch_no, settings_manager, session_maker),
                         doc_id
                     ): doc_id
                     for doc_id in settings_manager.document_list
@@ -260,4 +261,4 @@ def main():
                         total_failures += 1
 
                     pbar.update(1)
-                    pbar.set_description(f"Total_failures: {total_failures}")
+                    pbar.set_description(f"Converting - Total failures: {total_failures}")

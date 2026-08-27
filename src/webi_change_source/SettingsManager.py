@@ -4,7 +4,10 @@ from random import shuffle
 
 
 class SettingsManager:
-    def __init__(self, settings_file_path: Path):
+    def __init__(
+        self,
+        settings_file_path: Path,
+    ):
         with open(settings_file_path, "rb") as f:
             raw_settings: dict = tomllib.load(f)
 
@@ -21,7 +24,9 @@ class SettingsManager:
             shuffle(self.document_list)
 
     @property
-    def standard_headers(self):
+    def standard_headers(
+        self,
+    ) -> dict[str, str]:
         return {
             "Content-Type": "application/json",
             "Accept": "application/json"
