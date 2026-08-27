@@ -272,12 +272,12 @@ def change_data_provider_mappings(
     ok = ok and response_dict is not None and 'has not been modified' not in \
          response_dict['success']['message'] and correct_after_conversion
 
-    return ok, response_dict, response_text
     if ok:
         func_logger.info(f"Successfully changed data provider mappings for {document_id}:{data_provider_id}")
     else:
         func_logger.error(f"Failed to change data provider mappings for {document_id}:{data_provider_id}")
 
+    return ok, response_dict
 
 
 def save_changes_to_document(
