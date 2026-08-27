@@ -122,6 +122,13 @@ def process_and_perform_conversion(
             finally:
                 thread_session.commit()
 
+        try:
+            success = update_document_and_dataprovider_records(document_id, settings_manager, session_maker)
+            if not success:
+                logger.error(f"Error in updating document details after change source")
+        except Exception as e:
+            logger.error(f"Error in updating document details after change source: {e}")
+
         return number_of_failures > 0
 
 
