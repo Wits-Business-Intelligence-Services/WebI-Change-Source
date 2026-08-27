@@ -160,15 +160,28 @@ def get_all_data_provider_details(
 
     if ok and response_dict is not None:
         dps: list[dict] = response_dict["dataproviders"]["dataprovider"]
-        processed_dps = [
-            DataProviderQueryResult(
-                data_source_id=x["dataSourceId"] if "dataSourceId" in x else 0,
-                data_source_type=x["dataSourceType"] if "dataSourceType" in x else "UNK",
-                id=x["id"] if "id" in x else "UNK",
-                name=x["name"] if "name" in x else "UNK",
-            )
-            for x in dps
-        ]
+
+        processed_dps = []
+
+        for dp in dps:
+            dp_add_status: bool = False
+            if "id" in dp:
+                dp_result: DataProviderQueryResult | None = get_single_data_provider_details(
+                    document_id, dp["id"], settings_manager, logon_token)
+                if dp_result is not None:
+                    processed_dps.append(dp_result)
+                    dp_add_status = True
+
+            if not dp_add_status:
+                processed_dps.append(
+                    DataProviderQueryResult(
+                        data_source_id=-1,
+                        data_source_type="UNKNOWN",
+                        id="UNKNOWN",
+                        name="UNKNOWN",
+                    )
+                )
+
         func_logger.info(f"Successfully got all data provider details for {document_id}")
     else:
         func_logger.error(f"Failed to get all data provider details for {document_id}")
