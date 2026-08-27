@@ -180,21 +180,48 @@ def main():
 
         # Get base records for db
         with tqdm(total=len(settings_manager.document_list)) as pbar:
-            with ThreadPoolExecutor(max_workers=num_workers) as executor:
 
-                futures: dict[concurrent.futures.Future, int] = {
-                    executor.submit(
-                        lambda x: document_and_dataprovider_records(x, settings_manager, logger, session_maker),
-                        doc_id
-                    ): doc_id
-                    for doc_id in settings_manager.document_list
-                }
-                initial_db_population_results: dict[int, bool] = {}
-                for future in concurrent.futures.as_completed(futures):
-                    doc_id = futures[future]
-                    if not future.exception():
-                        initial_db_population_results[doc_id] = future.result()
-                    pbar.update(1)
+            total_failures: int = 0
+
+            if num_workers == 1:
+                document_id: int
+                for document_id in settings_manager.document_list:
+                    try:
+                        update_document_and_dataprovider_records(document_id, settings_manager, session_maker)
+                    except Exception as e:
+                        total_failures += 1
+                        func_logger.error(
+                            f"update_document_and_dataprovider_records failed for document {document_id}: {e}")
+                    finally:
+                        pbar.update(1)
+                        pbar.set_description(f"Gathering info - Total failures: {total_failures}")
+
+            else:
+                with ThreadPoolExecutor(max_workers=num_workers) as executor:
+
+                    futures: dict[concurrent.futures.Future, int] = {
+                        executor.submit(
+                            lambda
+                                x: update_document_and_dataprovider_records(x, settings_manager, session_maker),
+                            doc_id
+                        ): doc_id
+                        for doc_id in settings_manager.document_list
+                    }
+                    initial_db_population_results: dict[int, bool] = {}
+                    for future in concurrent.futures.as_completed(futures):
+                        doc_id = futures[future]
+                        if not future.exception():
+                            initial_db_population_results[doc_id] = future.result()
+                            if not initial_db_population_results[doc_id]:
+                                total_failures += 1
+                                func_logger.error(
+                                    f"update_document_and_dataprovider_records failed for document {doc_id}")
+                        else:
+                            total_failures += 1
+                            func_logger.error(
+                                f"update_document_and_dataprovider_records failed for document {doc_id}: {future.exception()}")
+                        pbar.update(1)
+                        pbar.set_description(f"Gathering info - Total failures: {total_failures}")
 
                 # Run in serial for any that failed above
                 document_id: int
