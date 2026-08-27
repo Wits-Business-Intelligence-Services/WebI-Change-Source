@@ -102,19 +102,7 @@ def process_and_perform_conversion(
                     conversion.status_change_source = "Success"
                     func_logger.info("status_change_source = Success")
 
-                    # print("Saving changes to document")
-                    conversion.status_save = "Saving"
-
-                    save_success: bool = api_backend.save_changes_to_document(
-                        dp.document_id,
-                        settings_manager,
-                        logon_token, logger
-                    )
-                    if not save_success:
-                        number_of_failures += 1
-
-                    # print(f"Save {"successful" if save_success else "unsuccessful"}")
-                    conversion.status_save = "Successful" if save_success else "Unsuccessful"
+                    conversion.status_save = "No save needed"
 
                     conversion.status_unload = "Unloading"
                     func_logger.debug("status_unload = Unloading")
