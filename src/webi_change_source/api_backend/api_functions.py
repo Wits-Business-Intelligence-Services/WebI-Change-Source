@@ -254,8 +254,23 @@ def change_data_provider_mappings(
         func_logger
     )
 
+    check_dp_result: DataProviderQueryResult | None = get_single_data_provider_details(
+        document_id,
+        data_provider_id,
+        settings_manager,
+        logon_token
+    )
+
+    correct_after_conversion: bool = False
+    if check_dp_result is not None:
+        correct_after_conversion = (check_dp_result.data_source_type == "UNX"
+                                    and check_dp_result.data_source_id == str(settings_manager.new_universe_id))
+
+    if not correct_after_conversion and response_dict is not None:
+        response_dict["correct_after_conversion"] = "Incorrect type and universe ID after conversion"
+
     ok = ok and response_dict is not None and 'has not been modified' not in \
-         response_dict['success']['message']
+         response_dict['success']['message'] and correct_after_conversion
 
     return ok, response_dict, response_text
     if ok:
