@@ -85,7 +85,7 @@ def process_and_perform_conversion(
                 with api_backend.APILogonManager(settings_manager) as logon_token:
                     ok: bool
                     change_dict: dict | None
-                    ok, change_dict, _ = api_backend.change_data_provider_mappings(
+                    ok, change_dict = api_backend.change_data_provider_mappings(
                         dp.document_id,
                         dp.id,
                         mappings_str,
