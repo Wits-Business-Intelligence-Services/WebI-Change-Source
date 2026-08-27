@@ -24,6 +24,7 @@ def process_and_perform_conversion(
 ) -> bool:
     with session_maker() as thread_session:
         func_logger: logging.Logger = logger.getChild("process_and_perform_conversion")
+        func_logger = func_logger.getChild(current_thread().name)
 
         number_of_failures: int = 0
 
