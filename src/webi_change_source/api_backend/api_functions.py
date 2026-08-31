@@ -209,13 +209,13 @@ def get_data_provider_mappings(
 
     params: dict = {
         "originDataproviderIds": data_provider_id,
-        "targetDatasourceId": settings_manager.new_universe_id,
+        "targetDatasourceId": settings_manager.target_universe_id,
     }
 
     ok: bool
     response_dict: dict | None
     ok, response_dict, response_text = __extract_response(
-        put(url=url, headers=headers, data=body, params=params),
+        get(url=url, headers=headers, json=strategy_json, params=params),
         func_logger
     )
 
@@ -243,7 +243,7 @@ def change_data_provider_mappings(
 
     params: dict = {
         "originDataproviderIds": data_provider_id,
-        "targetDatasourceId": settings_manager.new_universe_id,
+        "targetDatasourceId": settings_manager.target_universe_id,
         "skipChecking": "true",
     }
 

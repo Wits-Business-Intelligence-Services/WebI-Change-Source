@@ -58,7 +58,7 @@ def process_and_perform_conversion(
                     status_dp_details="OK"
                 )
 
-                if dp.data_source_type != "unv" or dp.data_source_id != settings_manager.old_universe_id:
+                if dp.data_source_type != "unv" or dp.data_source_id != settings_manager.source_universe_id:
                     conversion.status_dp_correct_source = "No"
                     func_logger.debug("status_dp_correct_source = No")
                     continue
