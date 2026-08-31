@@ -129,7 +129,7 @@ def process_and_perform_conversion(
                     if not save_success:
                         number_of_failures += 1
 
-                    conversion.status_save = "Successful" if save_success else "Unsuccessful"
+                    conversion.status_save = "Success" if save_success else "Failure"
 
                     conversion.status_unload = "Unloading"
                     func_logger.debug("status_unload = Unloading")
@@ -139,7 +139,7 @@ def process_and_perform_conversion(
                         logon_token
                     )
 
-                    conversion.status_unload = "Successful" if unload_success else "Unsuccessful"
+                    conversion.status_unload = "Success" if unload_success else "Failure"
                     logger.info(f"status_unload = {conversion.status_unload}")
 
             except Exception as e:
