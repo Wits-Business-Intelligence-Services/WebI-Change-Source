@@ -15,8 +15,19 @@ from webi_change_source.processes import *
 logger: logging.Logger = logging.getLogger(__name__)
 
 
-def main():
-    settings_manager: SettingsManager = SettingsManager(Path("./settings.toml"))
+def main(
+    webi_document_list_path: str,
+    update_document_data: bool,
+    perform_change_source: bool,
+    num_workers: int
+):
+    settings_manager: SettingsManager = SettingsManager(
+        Path("./settings.toml"),
+        webi_document_list_path,
+        update_document_data,
+        perform_change_source,
+        num_workers
+    )
 
     log_file_path: Path = Path(
         "./logs/conversion_log_" + str(datetime.today()).replace(" ", "_").replace(":", "_") + ".log").absolute()
