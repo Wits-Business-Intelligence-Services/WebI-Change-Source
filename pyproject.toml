@@ -1,14 +1,15 @@
 [project]
 name = "webi-change-source"
-version = "0.1.0"
+version = "0.9.0"
 requires-python = ">=3.14"
 dependencies = [
-    "pyrefly",
-    "requests",
-    "ruff",
-    "sqlalchemy",
-    "typer",
-    "tqdm"
+    "pyrefly==1.2.0",
+    "requests==2.34.2",
+    "ruff==0.16.5",
+    "sqlalchemy==2.0.52",
+    "typer==0.27.2",
+    "tqdm==4.70.0",
+    "rich==15.0.0",
 ]
 [project.scripts]
 webi_change_source = "webi_change_source.cli:app"
