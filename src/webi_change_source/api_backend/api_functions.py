@@ -263,8 +263,8 @@ def change_data_provider_mappings(
 
     correct_after_conversion: bool = False
     if check_dp_result is not None:
-        correct_after_conversion = (check_dp_result.data_source_type == "UNX"
-                                    and check_dp_result.data_source_id == str(settings_manager.new_universe_id))
+        correct_after_conversion = (check_dp_result.data_source_type == "unx"
+                                    and check_dp_result.data_source_id == str(settings_manager.target_universe_id))
 
     if not correct_after_conversion and response_dict is not None:
         response_dict["correct_after_conversion"] = "Incorrect type and universe ID after conversion"
