@@ -3,12 +3,14 @@ import logging
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from pathlib import Path
+from os import makedirs
 
 import sqlalchemy as sql
 import sqlalchemy.orm as sql_orm
 from tqdm import tqdm
+import rich
 
-from webi_change_source.SettingsManager import SettingsManager
+from webi_change_source.settings import *
 from webi_change_source.db_backend import *
 from webi_change_source.processes import *
 
@@ -21,6 +23,19 @@ def main(
     perform_change_source: bool,
     num_workers: int
 ):
+
+    settings_file_path: Path = Path("./settings.toml")
+
+    if not settings_file_path.exists():
+        with open(settings_file_path, "w") as new_settings_file:
+            with open(settings_template_path, "r") as settings_template_file:
+                settings_template: list[str] = settings_template_file.readlines()
+
+            new_settings_file.writelines(settings_template)
+
+        rich.print("Please populate [bold magenta]./settings.toml[/bold magenta] with your settings.")
+        raise SystemExit
+
     settings_manager: SettingsManager = SettingsManager(
         Path("./settings.toml"),
         webi_document_list_path,

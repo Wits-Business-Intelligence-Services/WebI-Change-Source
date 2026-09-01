@@ -1,8 +1,8 @@
 ["settings"]
-cms_server_host = ""
+cms_server_host = "http://"
 cms_server_port = 6405
 username = ""
 password = ""
 auth_type = "secLDAP"
-old_universe_id = -1
-new_universe_id = -1
+source_universe_id = -1
+target_universe_id = -1

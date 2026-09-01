@@ -3,7 +3,7 @@ from json import JSONDecoder
 
 from requests import Response, get, post, put
 
-from webi_change_source.SettingsManager import SettingsManager
+from webi_change_source.settings import SettingsManager
 from .DataProviderQueryResult import DataProviderQueryResult
 
 logger: logging.Logger = logging.getLogger(__name__)

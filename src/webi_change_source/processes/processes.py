@@ -6,7 +6,7 @@ import sqlalchemy as sql
 from sqlalchemy import orm as sql_orm
 
 from webi_change_source import api_backend
-from webi_change_source.SettingsManager import SettingsManager
+from webi_change_source.settings import SettingsManager
 from webi_change_source.db_backend import DataProvider, Conversion, populate_document_record, \
     populate_dataprovider_records
 
