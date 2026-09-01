@@ -10,7 +10,7 @@ class SettingsManager:
         webi_document_list_path: str,
         update_document_data: bool,
         perform_change_source: bool,
-        num_workers: int
+        num_workers: int,
     ):
         with open(settings_file_path, "rb") as f:
             raw_settings: dict = tomllib.load(f)

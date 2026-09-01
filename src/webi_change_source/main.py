@@ -2,17 +2,17 @@ import concurrent.futures
 import logging
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
-from pathlib import Path
 from os import makedirs
+from pathlib import Path
 
+import rich
 import sqlalchemy as sql
 import sqlalchemy.orm as sql_orm
 from tqdm import tqdm
-import rich
 
-from webi_change_source.settings import *
 from webi_change_source.db_backend import *
 from webi_change_source.processes import *
+from webi_change_source.settings import *
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -21,9 +21,8 @@ def main(
     webi_document_list_path: str,
     update_document_data: bool,
     perform_change_source: bool,
-    num_workers: int
+    num_workers: int,
 ):
-
     settings_file_path: Path = Path("./settings.toml")
 
     if not settings_file_path.exists():
