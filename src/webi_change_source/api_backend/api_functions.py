@@ -200,11 +200,6 @@ def get_data_provider_mappings(
     headers: dict = settings_manager.standard_headers
     headers["X-SAP-LogonToken"] = logon_token
 
-    body: dict = {
-        "policy": {"qualificationTolerance": "High", "dataTypeTolerance": "High"},
-        "strategies": [{"strategy": [{"@name": "SameId"}]}],
-    }
-
     url: str = f"{settings_manager.cms_server_host}:{settings_manager.cms_server_port}/biprws/raylight/v1/documents/{document_id}/dataproviders/mappings"
 
     params: dict = {
@@ -215,7 +210,7 @@ def get_data_provider_mappings(
     ok: bool
     response_dict: dict | None
     ok, response_dict, response_text = __extract_response(
-        get(url=url, headers=headers, json=strategy_json, params=params),
+        get(url=url, headers=headers, params=params),
         func_logger
     )
 
