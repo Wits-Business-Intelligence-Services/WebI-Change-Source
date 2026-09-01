@@ -44,6 +44,8 @@ def main(
         num_workers
     )
 
+    makedirs(Path("./logs"), exist_ok=True)
+
     log_file_path: Path = Path(
         "./logs/conversion_log_" + str(datetime.today()).replace(" ", "_").replace(":", "_") + ".log").absolute()
 
