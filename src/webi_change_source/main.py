@@ -22,6 +22,7 @@ def main(
     update_document_data: bool,
     perform_change_source: bool,
     num_workers: int,
+    command_name: str,
 ):
     settings_file_path: Path = Path("./settings.toml")
 
@@ -46,7 +47,7 @@ def main(
     makedirs(Path("./logs"), exist_ok=True)
 
     log_file_path: Path = Path(
-        "./logs/conversion_log_" + str(datetime.today()).replace(" ", "_").replace(":", "_") + ".log").absolute()
+        "./logs/" + str(datetime.today()).replace(" ", "_").replace(":", "_") + f"_{command_name}.log").absolute()
 
     logging.basicConfig(
         filename=log_file_path,

@@ -17,7 +17,8 @@ def update_local_document_db(
         webi_document_list_path,
         True,
         False,
-        num_workers
+        num_workers,
+        "update_local_document_db"
     )
 
 
@@ -31,7 +32,8 @@ def perform_change_source(
         webi_document_list_path,
         False,
         True,
-        num_workers
+        num_workers,
+        "perform_change_source"
     )
 
 
@@ -45,7 +47,8 @@ def full_pipeline(
         webi_document_list_path,
         True,
         True,
-        num_workers
+        num_workers,
+        "full_pipeline"
     )
 
 
