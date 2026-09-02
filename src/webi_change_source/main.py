@@ -129,23 +129,38 @@ def main(
 
                 total_failures: int = 0
 
-                futures: dict[concurrent.futures.Future, int] = {
-                    executor.submit(
-                        lambda
-                            x: process_and_perform_conversion(x, batch_no, settings_manager, session_maker),
-                        doc_id
-                    ): doc_id
-                    for doc_id in settings_manager.document_list
-                }
-                conversion_results: dict[int, bool] = {}
-                for future in concurrent.futures.as_completed(futures):
-                    doc_id: int = futures[future]
+                if settings_manager.num_workers == 1:
+                    document_id: int
+                    for document_id in settings_manager.document_list:
+                        try:
+                            conversion_result = process_and_perform_conversion(document_id, batch_no, settings_manager, session_maker)
+                            total_failures += conversion_result
+                        except Exception as e:
+                            total_failures += 1
+                            func_logger.error(
+                                f"process_and_perform_conversion failed for document {document_id}: {e}")
+                        finally:
+                            pbar.update(1)
+                            pbar.set_description(f"Converting - Total failures: {total_failures}")
 
-                    if not future.exception():
-                        conversion_results[doc_id] = future.result()
-                        total_failures += conversion_results[doc_id]
-                    else:
-                        total_failures += 1
+                else:
+                    futures: dict[concurrent.futures.Future, int] = {
+                        executor.submit(
+                            lambda
+                                x: process_and_perform_conversion(x, batch_no, settings_manager, session_maker),
+                            doc_id
+                        ): doc_id
+                        for doc_id in settings_manager.document_list
+                    }
+                    conversion_results: dict[int, bool] = {}
+                    for future in concurrent.futures.as_completed(futures):
+                        doc_id: int = futures[future]
 
-                    pbar.update(1)
-                    pbar.set_description(f"Converting - Total failures: {total_failures}")
+                        if not future.exception():
+                            conversion_results[doc_id] = future.result()
+                            total_failures += conversion_results[doc_id]
+                        else:
+                            total_failures += 1
+
+                        pbar.update(1)
+                        pbar.set_description(f"Converting - Total failures: {total_failures}")
