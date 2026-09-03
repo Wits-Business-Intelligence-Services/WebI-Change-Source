@@ -18,7 +18,7 @@ uvx --python 3.14 --from git+https://github.com/Wits-Business-Intelligence-Servi
 ```
 - `uvx` is `uv` special mode that creates temporary environments to install and run tools directly without installation.
 - `--python 3.14` is needed as there is a chance your current shell's python version differs from what the tool expects.
-- `--from <git url>` specifies that `uv` should pull this package from GitHub as this tool is not publised to PyPI
+- `--from <GitHub url>` specifies that `uv` should pull this package from GitHub as this tool is not publised to PyPI
 - `webi_change_source.exe` this package provides one tool and that is what we will be running. Everything below is
 appended onto the above line
 
