@@ -81,3 +81,6 @@ The db table `conversions` contains the conversion results, with each run of `pe
 
 This runs the above two commands in order, retrieving the document and query details in the first step, then performing
 the conversion on the appropriate documents from that list.
+
+## Copyright
+Copyright © 2026 Wits Business Intelligence Services. All rights reserved.
