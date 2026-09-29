@@ -5,9 +5,9 @@ version = "1.0.0"
 requires-python = ">=3.14"
 dependencies = [
     "requests==2.34.2",
-    "sqlalchemy==2.0.52",
+    "sqlalchemy==2.1.1",
     "typer==0.27.2",
-    "tqdm==4.70.0",
+    "tqdm==4.70.1",
     "rich==15.0.0",
 ]
 [project.scripts]
