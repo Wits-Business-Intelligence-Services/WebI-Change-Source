@@ -117,6 +117,7 @@ def populate_dataprovider_records(
                     id=dp_result.id,
                     document_id=document_id,
                     name=dp_result.name,
+                    data_source_original_id=dp_result.data_source_id,
                     data_source_id=dp_result.data_source_id,
                     data_source_original_type=dp_result.data_source_type,
                     data_source_type=dp_result.data_source_type

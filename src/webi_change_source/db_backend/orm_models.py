@@ -41,6 +41,7 @@ class DataProvider(Base):
     id: sql_orm.Mapped[str] = sql_orm.mapped_column(primary_key=True)
     document_id: sql_orm.Mapped[int] = sql_orm.mapped_column(sql.ForeignKey("documents.id"), primary_key=True)
     name: sql_orm.Mapped[str]
+    data_source_original_id: sql_orm.Mapped[int]
     data_source_id: sql_orm.Mapped[int]
     data_source_original_type: sql_orm.Mapped[str]
     data_source_type: sql_orm.Mapped[str]
@@ -52,6 +53,7 @@ class DataProvider(Base):
                 f"id={self.id!r}, "
                 f"document_id={self.document_id!r}, "
                 f"name={self.name!r}, "
+                f"data_source_original_id={self.data_source_original_id!r}, "
                 f"data_source_id={self.data_source_id!r}, "
                 f"data_source_original_type={self.data_source_original_type!r}, "
                 f"data_source_type={self.data_source_type!r}"
