@@ -52,10 +52,10 @@ def populate_document_record(
                 if session.scalars(stmt).one_or_none() is not None:
                     # Perform an update
                     doc = session.scalars(stmt).one()
-                    doc.name = doc_details["name"] if "name" in doc_details else "UNKNOWN"
-                    doc.path = doc_details["path"] if "path" in doc_details else "UNKNOWN"
-                    doc.created_by = doc_details["createdBy"] if "createdBy" in doc_details else "UNKNOWN"
-                    doc.last_author = doc_details["lastAuthor"] if "lastAuthor" in doc_details else "UNKNOWN"
+                    doc.name = doc_details.get("name", "UNKNOWN")
+                    doc.path = doc_details.get("path", "UNKNOWN")
+                    doc.created_by = doc_details.get("createdBy", "UNKNOWN")
+                    doc.last_author = doc_details.get("lastAuthor", "UNKNOWN")
                     doc.last_updated = datetime.fromisoformat(
                         doc_details["updated"]) if "updated" in doc_details else datetime.fromtimestamp(0, tz=UTC)
                     doc.status = "OK"
@@ -63,10 +63,10 @@ def populate_document_record(
                     # Create new record
                     doc: Document = Document(
                         id=document_id,
-                        name=doc_details["name"] if "name" in doc_details else "UNKNOWN",
-                        path=doc_details["path"] if "path" in doc_details else "UNKNOWN",
-                        created_by=doc_details["createdBy"] if "createdBy" in doc_details else "UNKNOWN",
-                        last_author=doc_details["lastAuthor"] if "lastAuthor" in doc_details else "UNKNOWN",
+                        name=doc_details.get("name", "UNKNOWN"),
+                        path=doc_details.get("path", "UNKNOWN"),
+                        created_by=doc_details.get("createdBy", "UNKNOWN"),
+                        last_author=doc_details.get("lastAuthor", "UNKNOWN"),
                         last_updated=datetime.fromisoformat(
                             doc_details["updated"]) if "updated" in doc_details else datetime.fromtimestamp(0, tz=UTC),
                         status="OK",
