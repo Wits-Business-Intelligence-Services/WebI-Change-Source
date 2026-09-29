@@ -1,11 +1,12 @@
 import logging
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 
 import sqlalchemy as sql
 from sqlalchemy import orm as sql_orm
 
 from webi_change_source import api_backend
 from webi_change_source.settings import SettingsManager
+
 from .orm_models import DataProvider, Document
 
 logger: logging.Logger = logging.getLogger(__name__)
