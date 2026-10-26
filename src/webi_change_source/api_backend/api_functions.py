@@ -324,9 +324,9 @@ def set_document_unused(
     )
 
     if ok:
-        func_logger.info(f"Successfully set document {document_id} to unused")
+        func_logger.info(f"Successfully set document {document_id} to Unused")
     else:
-        func_logger.error(f"Failed to set document {document_id} to unused")
+        func_logger.error(f"Failed to set document {document_id} to Unused")
 
     return ok
 
@@ -353,8 +353,8 @@ def set_document_keepalive(
     )
 
     if ok:
-        func_logger.info(f"Successfully set document {document_id} to unused")
+        func_logger.info(f"Successfully set document {document_id} to KeepAlive")
     else:
-        func_logger.error(f"Failed to set document {document_id} to unused")
+        func_logger.error(f"Failed to set document {document_id} to KeepAlive")
 
     return ok
