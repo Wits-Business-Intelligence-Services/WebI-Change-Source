@@ -8,5 +8,6 @@ __all__ = [
     "get_data_provider_mappings",
     "change_data_provider_mappings",
     "save_changes_to_document",
-    "set_document_unused"
+    "set_document_unused",
+    "set_document_keepalive"
 ]

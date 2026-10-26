@@ -329,3 +329,32 @@ def set_document_unused(
         func_logger.error(f"Failed to set document {document_id} to unused")
 
     return ok
+
+
+def set_document_keepalive(
+    document_id: int,
+    settings_manager: SettingsManager,
+    logon_token: str,
+) -> bool:
+    func_logger: logging.Logger = logger.getChild("set_document_keepalive")
+
+    headers: dict = settings_manager.standard_headers
+    headers["X-SAP-LogonToken"] = logon_token
+
+    body: dict = {"document": {"state": "KeepAlive"}}
+
+    url: str = f"{settings_manager.cms_server_host}:{settings_manager.cms_server_port}/biprws/raylight/v1/documents/{document_id}"
+
+    ok: bool
+    response_dict: dict | None
+    ok, response_dict, response_text = __extract_response(
+        put(url=url, headers=headers, json=body),
+        func_logger
+    )
+
+    if ok:
+        func_logger.info(f"Successfully set document {document_id} to unused")
+    else:
+        func_logger.error(f"Failed to set document {document_id} to unused")
+
+    return ok

@@ -100,6 +100,12 @@ def process_and_perform_conversion(
                 func_logger.debug("status_change_source = Starting")
 
                 with api_backend.APILogonManager(settings_manager) as logon_token:
+                    
+                    keepalive_success = api_backend.set_document_keepalive(
+                        dp.document_id, settings_manager, logon_token
+                    )
+                    logger.info(f"status_keepalive_change_source = {'Success' if keepalive_success else 'Failure'}")
+
                     ok: bool
                     change_dict: dict | None
                     ok, change_dict = api_backend.change_data_provider_mappings(
