@@ -75,7 +75,8 @@ def main(
                 document_id: int
                 for document_id in settings_manager.document_list:
                     try:
-                        update_document_and_dataprovider_records(document_id, settings_manager, session_maker)
+                        success: bool = update_document_and_dataprovider_records(document_id, settings_manager, session_maker)
+                        total_failures += (not success)
                     except Exception as e:
                         total_failures += 1
                         func_logger.error(
